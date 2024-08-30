@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Dot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #focus-point {
+            width: 10px;
+            height: 10px;
+            background-color: #000;
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+            display: none;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            /* background-color: #4CAF50; */
+            background: linear-gradient(to right, #3D51A0, #543493, #84175C);
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #start-button {
+            position: absolute;
+        }
+        #restart-button {
+            position: absolute;
+            bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="focus-point"></div>
+    <button id="start-button" class="button">Start</button>
+    <button id="restart-button" class="button">Restart</button>
+
+    <script>
+        const focusPoint = document.getElementById('focus-point');
+        const startButton = document.getElementById('start-button');
+        const restartButton = document.getElementById('restart-button');
+        let animationInterval;
+        let disappearTimeout;
+
+        function animateFocusPoint() {
+            focusPoint.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                focusPoint.style.transform = 'scale(1)';
+            }, 500);
+        }
+
+        function startFocusSession() {
+            focusPoint.style.display = 'block';
+            startButton.style.display = 'none';
+            restartButton.style.display = 'none';
+            
+            animationInterval = setInterval(animateFocusPoint, 1000);
+            
+            disappearTimeout = setTimeout(() => {
+                clearInterval(animationInterval);
+                focusPoint.style.display = 'none';
+                restartButton.style.display = 'block';
+            }, 60000);
+        }
+
+        function restartSession() {
+            clearInterval(animationInterval);
+            clearTimeout(disappearTimeout);
+            startFocusSession();
+        }
+
+        startButton.addEventListener('click', startFocusSession);
+        restartButton.addEventListener('click', restartSession);
+    </script>
+</body>
+</html>
