@@ -53,6 +53,7 @@
         const restartButton = document.getElementById('restart-button');
         let animationInterval;
         let disappearTimeout;
+        let wakeLock = null;
 
         function animateFocusPoint() {
             focusPoint.style.transform = 'scale(1.2)';
@@ -67,11 +68,22 @@
             restartButton.style.display = 'none';
             
             animationInterval = setInterval(animateFocusPoint, 1000);
+
+            const requestWakeLock = async () => {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                } catch (err) {
+                }
+            };
+
+            requestWakeLock();
             
             disappearTimeout = setTimeout(() => {
                 clearInterval(animationInterval);
                 focusPoint.style.display = 'none';
                 restartButton.style.display = 'block';
+                wakeLock.release();
+                wakeLock = null;
             }, 60000);
         }
 
