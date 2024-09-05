@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f0f0f0" />
+    <link rel="apple-touch-icon" href="./icons/icon_180.png">
+    <link rel="icon" type="image/png" href="./icons/icon_64.png"/>
+    <link rel="manifest" href="./manifest.webmanifest" />
     <title>Focus Dot</title>
     <style>
         body {
@@ -48,6 +52,14 @@
     <button id="restart-button" class="button">Restart</button>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
+                .register('./sw.js')
+                .then((registration) => {
+                    registration.update()
+                })
+        };
+
         const focusPoint = document.getElementById('focus-point');
         const startButton = document.getElementById('start-button');
         const restartButton = document.getElementById('restart-button');
