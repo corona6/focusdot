@@ -1,11 +1,8 @@
 
-const MAIN_CACHE = 'main';
+const MAIN_CACHE = 'main_20240910';
 
 self.addEventListener("install", async (event) => {
     event.waitUntil((async () => {
-        const cacheKeys = await caches.keys()
-        await Promise.all(cacheKeys.map(name => caches.delete(name)))
-
         const cache = await caches.open(MAIN_CACHE)
         await cache.addAll(['.'])
     })())
@@ -35,3 +32,18 @@ const cacheFirst = (event) => {
 };
 
 self.addEventListener('fetch', cacheFirst);
+
+const deleteCache = async (key) => {
+    await caches.delete(key);
+};
+
+const deleteOldCaches = async () => {
+    const cacheKeepList = [MAIN_CACHE];
+    const keyList = await caches.keys();
+    const cachesToDelete = keyList.filter((key) => !cacheKeepList.includes(key));
+    await Promise.all(cachesToDelete.map(deleteCache));
+};
+
+self.addEventListener("activate", (event) => {
+    event.waitUntil(deleteOldCaches());
+});
