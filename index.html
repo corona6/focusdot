@@ -54,7 +54,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker
-                .register('./sw.js')
+                .register('./sw.js', {scope: './'})
                 .then((registration) => {
                     registration.update()
                 })
