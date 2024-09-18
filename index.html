@@ -66,6 +66,7 @@
         let animationInterval;
         let disappearTimeout;
         let wakeLock = null;
+        var restartCount = 0;
 
         function animateFocusPoint() {
             focusPoint.style.transform = 'scale(1.2)';
@@ -78,6 +79,9 @@
             focusPoint.style.display = 'block';
             startButton.style.display = 'none';
             restartButton.style.display = 'none';
+
+            restartCount = ++restartCount;
+            restartButton.textContent = "Restart (" + restartCount + ")";
             
             animationInterval = setInterval(animateFocusPoint, 1000);
 
