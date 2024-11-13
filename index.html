@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +17,8 @@
             align-items: center;
             height: 100vh;
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            transition: background-color 1s ease;
         }
         #focus-point {
             width: 10px;
@@ -24,11 +26,44 @@
             background-color: #000;
             border-radius: 50%;
             transition: transform 0.5s ease, opacity 0.3s ease-in-out;
+            display: none;
+        }
+        .button, select {
+            margin-right: 5px;
+            padding: 10px 20px;
+            font-size: 15px;
+            cursor: pointer;
+            background-color: white;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            outline: none;
         }
     </style>
 </head>
 <body>
     <div id="focus-point"></div>
+    <div id="start-menu">
+        <select id="minutes">
+            <option value="4">1</option>
+            <option value="8">2</option>
+            <option value="12">3</option>
+            <option value="15">4</option>
+            <option value="19">5</option>
+            <option value="23">6</option>
+            <option value="27">7</option>
+            <option value="30">8</option>
+            <option value="34">9</option>
+            <option value="38">10</option>
+            <option value="42">11</option>
+            <option value="45">12</option>
+            <option value="49">13</option>
+            <option value="53">14</option>
+            <option value="57">15</option>
+        </select>
+        <button id="start-button" class="button">Start</button>
+        <button id="color-change-button" class="button">Color</button>
+    </div>
 
     <script>
         if ('serviceWorker' in navigator) {
@@ -40,12 +75,16 @@
         };
 
         const focusPoint = document.getElementById('focus-point');
+        const startMenu = document.getElementById('start-menu');
+        const minutesVal = document.getElementById('minutes');
+        const startButton = document.getElementById('start-button');
+        const colorButton = document.getElementById('color-change-button');
         let animationInterval;
         let boxInterval;
         let disappearTimeout;
         let wakeLock = null;
-        let isPlay = false;
         let isOpacity = false;
+        let isDark = false;
 
         function animateFocusPoint() {
             focusPoint.style.transform = 'scale(1.2)';
@@ -64,11 +103,8 @@
         }
 
         function startFocusSession() {
-            isPlay = !isPlay;
-            if(!isPlay) {
-                restartSession();
-                return;
-            }
+            focusPoint.style.display = 'block';
+            startMenu.style.display = 'none';
             
             boxInterval = setInterval(boxOpacity, 4000);
             animationInterval = setInterval(animateFocusPoint, 1000);
@@ -83,25 +119,30 @@
             requestWakeLock();
             
             disappearTimeout = setTimeout(() => {
+                focusPoint.style.display = 'none';
+                startMenu.style.display = 'block';
                 clearInterval(animationInterval);
                 clearInterval(boxInterval);
                 wakeLock.release();
                 wakeLock = null;
-                isPlay = false;
                 isOpacity = false;
                 focusPoint.style.opacity = 1;
-            }, 64000);
+            }, 1000 * 16 * minutesVal.value);
         }
 
-        function restartSession() {
-            clearInterval(animationInterval);
-            clearInterval(boxInterval);
-            clearTimeout(disappearTimeout);
-            isOpacity = false;
-            focusPoint.style.opacity = 1;
+        function changeColor() {
+            isDark = !isDark;
+            if(isDark) {
+                document.body.style.backgroundColor = "#000";
+                focusPoint.style.backgroundColor = "#8ea6bb";
+            } else {
+                document.body.style.backgroundColor = "#f0f0f0";
+                focusPoint.style.backgroundColor = "#000";
+            }
         }
 
-        document.body.addEventListener('click', startFocusSession);
+        startButton.addEventListener('click', startFocusSession);
+        colorButton.addEventListener('click', changeColor);
     </script>
 </body>
 </html>
