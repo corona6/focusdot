@@ -21,11 +21,11 @@
             transition: background-color 1s ease;
         }
         #focus-point {
-            width: 20rem;
-            height: 20rem;
+            width: 0.75rem;
+            height: 0.75rem;
             background-color: #000;
             border-radius: 50%;
-            transition: transform 5.3s cubic-bezier(0.12, 0, 0.39, 0), opacity 4.7s ease-in-out;
+            transition: transform 3.3s cubic-bezier(0.12, 0, 0.39, 0), opacity 4.7s ease-in-out;
             display: none;
         }
         .button, select {
@@ -88,7 +88,7 @@
         let isDark = false;
 
         function animateFocusPoint() {
-            focusPoint.style.transform = 'scale(1.1)';
+            focusPoint.style.transform = 'scale(1.5)';
             setTimeout(() => {
                 focusPoint.style.transform = 'scale(1)';
             }, 2500);
@@ -97,7 +97,7 @@
         function boxOpacity() {
             isOpacity = !isOpacity;
             if(isOpacity) {
-                focusPoint.style.opacity = .85;
+                focusPoint.style.opacity = .5;
             } else {
                 focusPoint.style.opacity = 1;
             }
